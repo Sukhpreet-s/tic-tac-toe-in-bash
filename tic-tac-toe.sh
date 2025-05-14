@@ -11,6 +11,9 @@ turn='x'
 # variable to track win status to stop the game loop
 won=false
 
+# variable to track move count to end game if tie
+max_moves=9
+
 function run_game () {
 	echo -e "Tic Tac Toe\n"
 	echo -e "Enter coordinates in the format (xy)."
@@ -23,7 +26,7 @@ function run_game () {
 
 	echo -e "\n\n\n"
 
-	echo "Would you like to do a test? Enter y/n"
+	echo "Would you like to do a test? Enter y/(any other character means no)"
 	read testrun
 
 	if [ $testrun == 'y' ]; then 
@@ -34,20 +37,38 @@ function run_game () {
 		clear_game
 	fi
 
-	echo -e "\n\n\n"
+	echo -e "\n\n"
 	echo "Game started!"
 
 	# run game loop
 	while [ $won != true ]; do
-		echo -e "\n\nEnter position:"
+		echo -e "\n\nTurn: $turn\nEnter position:"
 		read pos
 
 		update_game $pos
 		print_game
 
-		win_check
+		# update move count
+		((max_moves--))
 
-		echo "won: $won"
+		# check for winning condition
+		win_check
+		if [ $won = true ]; then
+			echo "won: $turn"
+			exit 0
+		fi
+
+		# end game if out of moves
+		if [ $max_moves == 0 ]; then
+			echo "Game tied!"
+			exit 0
+		fi
+
+		# flip the turn
+		if [ $turn = 'x' ]; then turn='o'
+		else turn='x'
+		fi
+
 	done
 }
 
