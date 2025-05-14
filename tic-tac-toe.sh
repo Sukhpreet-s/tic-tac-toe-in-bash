@@ -11,6 +11,46 @@ turn='x'
 # variable to track win status to stop the game loop
 won=false
 
+function run_game () {
+	echo -e "Tic Tac Toe\n"
+	echo -e "Enter coordinates in the format (xy)."
+	echo -e "Ex: 13 (1st row and 3rd column) results as follows:\n"
+	echo " | |x"
+	echo "- - -"
+	echo " | | "
+	echo "- - -"
+	echo " | | "
+
+	echo -e "\n\n\n"
+
+	echo "Would you like to do a test? Enter y/n"
+	read testrun
+
+	if [ $testrun == 'y' ]; then 
+		echo "Enter the coordinates (xy):"
+		read pos
+		update_game $pos
+		print_game
+		clear_game
+	fi
+
+	echo -e "\n\n\n"
+	echo "Game started!"
+
+	# run game loop
+	while [ $won != true ]; do
+		echo -e "\n\nEnter position:"
+		read pos
+
+		update_game $pos
+		print_game
+
+		win_check
+
+		echo "won: $won"
+	done
+}
+
 function print_game () {
 	echo -e "\n\n"
 	echo -e "Game:\n"
@@ -73,39 +113,4 @@ function win_check () {
 	fi
 }
 
-echo -e "Tic Tac Toe\n"
-echo -e "Enter coordinates in the format (xy). 
-Ex: 13 (1st row and 3rd column) results as follows:\n"
-
-echo " | |x
-- - -
- | | 
-- - -
- | | "
-
-echo -e "\n\n\n"
-
-echo "Would you like to do a test? Enter y/n"
-read testrun
-
-if [ $testrun == 'y' ]; then 
-	echo "Enter the coordinates (xy):"
-	read pos
-	update_game $pos
-	print_game
-	clear_game
-fi
-
-# run game loop
-while [ $won != true ]; do
-	echo -e "\n\nEnter position:"
-	read pos
-
-	update_game $pos
-	print_game
-
-	win_check
-
-	echo "won: $won"
-done
-
+run_game
